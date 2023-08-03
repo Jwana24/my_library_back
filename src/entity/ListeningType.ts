@@ -1,17 +1,17 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Listening } from "./Listening";
-import { ListeningGenre } from "./ListeningGenre";
+import { Listening } from "./Listening.js";
+import { ListeningGenre } from "./ListeningGenre.js";
 
 @Entity()
 export class ListeningType {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @Column()
-    name
+    name: string
     @OneToMany(() => Listening, (listening) => listening.type)
-    listenings
+    listenings: Listening[]
     @OneToMany(() => ListeningGenre, (genre) => genre.type)
-    genres
+    genres: ListeningGenre[]
 }

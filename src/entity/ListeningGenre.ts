@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { ListeningType } from "./ListeningType";
+import { ListeningType } from "./ListeningType.js";
 
 @Entity()
 export class ListeningGenre {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @Column()
-    name
+    name: string
     @ManyToOne(() => ListeningType, (type) => type.genres)
-    type
+    type: ListeningType
 }

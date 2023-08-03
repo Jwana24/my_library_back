@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { ReadingType } from "./ReadingType";
+import { ReadingType } from "./ReadingType.js";
 
 @Entity()
 export class ReadingGenre {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @Column()
-    name
+    name: string
     @ManyToOne(() => ReadingType, (type) => type.genres)
-    type
+    type: ReadingType
 }

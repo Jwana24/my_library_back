@@ -1,17 +1,17 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Reading } from "./Reading";
-import { ReadingGenre } from "./ReadingGenre";
+import { Reading } from "./Reading.js";
+import { ReadingGenre } from "./ReadingGenre.js";
 
 @Entity()
 export class ReadingType {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @Column()
-    name
+    name: string
     @OneToMany(() => Reading, (reading) => reading.type)
-    readings
+    readings: Reading[]
     @OneToMany(() => ReadingGenre, (genre) => genre.type)
-    genres
+    genres: ReadingGenre[]
 }

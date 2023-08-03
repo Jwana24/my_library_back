@@ -1,22 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { ListeningGenre } from "./ListeningGenre";
-import { ListeningType } from "./ListeningType";
+import { ListeningGenre } from "./ListeningGenre.js";
+import { ListeningType } from "./ListeningType.js";
 
 @Entity()
 export class Listening {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @ManyToMany(() => ListeningGenre)
     @JoinTable()
-    genres
+    genres: ListeningGenre[]
     @ManyToOne(() => ListeningType, (type) => type.listenings)
-    type
+    type: ListeningType
     @Column()
-    artist
+    artist: string
     @Column()
-    title
+    title: string
     @Column("blob")
-    image
+    image: string
 }

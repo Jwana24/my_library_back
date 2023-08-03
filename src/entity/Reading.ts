@@ -1,47 +1,47 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { ReadingGenre } from "./ReadingGenre";
-import { ReadingType } from "./ReadingType";
+import { ReadingGenre } from "./ReadingGenre.js";
+import { ReadingType } from "./ReadingType.js";
 
-export const Status = {
-    readingInProgress: "Currently reading",
-    toRead: "To read",
-    toBuy: "To buy"
+export enum Status {
+    READINGINPROGRESS = "Currently reading",
+    TOREAD = "To read",
+    TOBUY = "To buy"
 }
 
-export const Lang = {
-    fr: "Français",
-    en: "Anglais"
+export enum Lang {
+    FR = "Français",
+    EN = "Anglais"
 }
 
 @Entity()
 export class Reading {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @ManyToMany(() => ReadingGenre)
     @JoinTable()
-    genres
+    genres: ReadingGenre[]
     @ManyToOne(() => ReadingType, (type) => type.readings)
-    type
+    type: ReadingType
     @Column({
         type: "enum",
         enum: Status
     })
-    status
+    status: Status
     @Column()
-    author
+    author: string
     @Column()
-    title
+    title: string
     @Column("blob")
-    image
+    image: string
     @Column("boolean")
-    saga
+    saga:boolean
     @Column("text")
-    summary
+    summary: string
     @Column({
         type: "enum",
         enum: Lang
     })
-    lang
+    lang: Lang
 }

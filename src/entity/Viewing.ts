@@ -1,36 +1,36 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { ViewingGenre } from "./ViewingGenre";
-import { ViewingType } from "./ViewingType";
+import { ViewingGenre } from "./ViewingGenre.js";
+import { ViewingType } from "./ViewingType.js";
 
-export const Status = {
-    viewingInProgress: "Currently viewing",
-    toView: "To view"
+export enum Status {
+    VIEWINGINPROGRESS = "Currently viewing",
+    TOVIEW = "To view"
 }
 
 @Entity()
 export class Viewing {
 
     @PrimaryGeneratedColumn()
-    id
+    id: number
 
     @ManyToMany(() => ViewingGenre)
     @JoinTable()
-    genres
+    genres: ViewingGenre[]
     @ManyToOne(() => ViewingType, (type) => type.viewings)
-    type
+    type: ViewingType
     @Column({
         type: "enum",
         enum: Status
     })
-    status
+    status: Status
     @Column()
-    producer
+    producer: string
     @Column()
-    title
+    title: string
     @Column("blob")
-    image
+    image: string
     @Column("boolean")
-    saga
+    saga: boolean
     @Column("text")
-    summary
+    summary: string
 }
