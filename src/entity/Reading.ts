@@ -3,9 +3,10 @@ import { ReadingGenre } from "./ReadingGenre.js";
 import { ReadingType } from "./ReadingType.js";
 
 export enum Status {
-    READINGINPROGRESS = "Currently reading",
-    TOREAD = "To read",
-    TOBUY = "To buy"
+    READINGINPROGRESS = "En cours de lecture",
+    TOREAD = "A lire",
+    TOBUY = "A acheter",
+    READ = "Lu"
 }
 
 export enum Lang {

@@ -2,7 +2,6 @@ import express from "express";
 const router = express.Router();
 import { AppDataSource } from "../src/data-source.js";
 import { ReadingGenre } from "../src/entity/ReadingGenre.js";
-import { ReadingType } from "../src/entity/ReadingType";
 
 router.post('/reading-genre', async(req, res) => {
   const dataReadingGenre = req.body;

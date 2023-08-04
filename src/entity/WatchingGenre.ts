@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { ViewingType } from "./ViewingType.js";
+import { WatchingType } from "./WatchingType";
 
 @Entity()
-export class ViewingGenre {
+export class WatchingGenre {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
     name: string
-    @ManyToOne(() => ViewingType, (type) => type.genres)
-    type: ViewingType
+    @ManyToOne(() => WatchingType, (type) => type.genres)
+    type: WatchingType
 }

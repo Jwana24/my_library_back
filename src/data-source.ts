@@ -4,10 +4,10 @@ import "dotenv/config";
 import { Reading } from "./entity/Reading.js";
 import { ReadingGenre } from "./entity/ReadingGenre.js";
 import { ReadingType } from "./entity/ReadingType.js";
-import { Viewing } from "./entity/Viewing.js";
+import { Watching } from "./entity/Watching";
 import { Listening } from "./entity/Listening.js";
-import { ViewingGenre } from "./entity/ViewingGenre.js";
-import { ViewingType } from "./entity/ViewingType.js";
+import { WatchingGenre } from "./entity/WatchingGenre";
+import { WatchingType } from "./entity/WatchingType";
 import { ListeningGenre } from "./entity/ListeningGenre.js";
 import { ListeningType } from "./entity/ListeningType.js";
 
@@ -24,9 +24,9 @@ export const AppDataSource = new DataSource({
         Reading,
         ReadingGenre,
         ReadingType,
-        Viewing,
-        ViewingGenre,
-        ViewingType,
+        Watching,
+        WatchingGenre,
+        WatchingType,
         Listening,
         ListeningGenre,
         ListeningType

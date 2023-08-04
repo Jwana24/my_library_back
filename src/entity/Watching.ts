@@ -1,23 +1,24 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { ViewingGenre } from "./ViewingGenre.js";
-import { ViewingType } from "./ViewingType.js";
+import { WatchingGenre } from "./WatchingGenre.js";
+import { WatchingType } from "./WatchingType.js";
 
 export enum Status {
-    VIEWINGINPROGRESS = "Currently viewing",
-    TOVIEW = "To view"
+    WATCHINGINPROGRESS = "En cours de visionnage",
+    TOWATCH = "A voir",
+    WATCH = "Vu"
 }
 
 @Entity()
-export class Viewing {
+export class Watching {
 
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToMany(() => ViewingGenre)
+    @ManyToMany(() => WatchingGenre)
     @JoinTable()
-    genres: ViewingGenre[]
-    @ManyToOne(() => ViewingType, (type) => type.viewings)
-    type: ViewingType
+    genres: WatchingGenre[]
+    @ManyToOne(() => WatchingType, (type) => type.watchings)
+    type: WatchingType
     @Column({
         type: "enum",
         enum: Status
