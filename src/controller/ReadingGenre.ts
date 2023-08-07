@@ -8,7 +8,10 @@ export const create = async(req: Request, res: Response) => {
   try {
     const insertReadingGenre = await AppDataSource.manager.insert(ReadingGenre, dataReadingGenre);
     const id = (insertReadingGenre).identifiers[0].id;
-    res.status(201).json(await AppDataSource.manager.findOneBy(ReadingGenre, { id: id }));
+    res.status(201).json(await AppDataSource.manager.findOne(
+      ReadingGenre,
+      { where: { id: id }, relations: ['genres', 'type'] }
+    ));
   } catch (error) {
     res.status(500).send(error);
   }
@@ -20,7 +23,10 @@ export const getAll = async(_req: Request, res: Response) => {
 
 export const getOne = async(req: Request, res: Response) => {
   const idReadingGenre = parseInt(req.params.id);
-  const readingGenre = await AppDataSource.manager.findOneBy(ReadingGenre, { id: idReadingGenre });
+  const readingGenre = await AppDataSource.manager.findOne(
+    ReadingGenre,
+    { where: { id: idReadingGenre }, relations: ['genres', 'type'] }
+  );
 
   if (!readingGenre) {
     res.status(404).send('Ce genre de lecture est introuvable.');
@@ -31,7 +37,10 @@ export const getOne = async(req: Request, res: Response) => {
 export const update = async(req: Request, res: Response) => {
   const idReadingGenre = parseInt(req.params.id);
   const dataReadingGenre = req.body;
-  const readingGenre = await AppDataSource.manager.findOneBy(ReadingGenre, { id: idReadingGenre });
+  const readingGenre = await AppDataSource.manager.findOne(
+    ReadingGenre,
+    { where: { id: idReadingGenre }, relations: ['genres', 'type'] }
+  );
 
   if (!readingGenre) {
     res.status(404).send('Ce genre de lecture est introuvable.');
@@ -47,7 +56,10 @@ export const update = async(req: Request, res: Response) => {
 
 export const deleteOne = async(req: Request, res: Response) => {
   const idReadingGenre = parseInt(req.params.id);
-  const readingGenre = await AppDataSource.manager.findOneBy(ReadingGenre, { id: idReadingGenre });
+  const readingGenre = await AppDataSource.manager.findOne(
+    ReadingGenre,
+    { where: { id: idReadingGenre }, relations: ['genres', 'type'] }
+  );
 
   if (!readingGenre) {
     res.status(404).send('Ce genre de lecture est introuvable.');

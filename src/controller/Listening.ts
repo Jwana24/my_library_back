@@ -8,7 +8,10 @@ export const create = async(req: Request, res: Response) => {
   try {
     const insertListening = await AppDataSource.manager.insert(Listening, dataListening);
     const id = (insertListening).identifiers[0].id;
-    res.status(201).json(await AppDataSource.manager.findOneBy(Listening, { id: id }));
+    res.status(201).json(await AppDataSource.manager.findOne(
+      Listening,
+      { where: { id: id }, relations: ['genres', 'type'] }
+    ));
   } catch (error) {
     res.status(500).send(error);
   }
@@ -20,7 +23,10 @@ export const getAll = async(_req: Request, res: Response) => {
 
 export const getOne = async(req: Request, res: Response) => {
   const idListening = parseInt(req.params.id);
-  const listening = await AppDataSource.manager.findOneBy(Listening, { id: idListening });
+  const listening = await AppDataSource.manager.findOne(
+    Listening,
+    { where: { id: idListening }, relations: ['genres', 'type'] }
+  );
 
   if (!listening) {
     res.status(404).send('Cette écoute est introuvable.');
@@ -31,7 +37,10 @@ export const getOne = async(req: Request, res: Response) => {
 export const update = async(req: Request, res: Response) => {
   const idListening = parseInt(req.params.id);
   const dataListening = req.body;
-  const listening = await AppDataSource.manager.findOneBy(Listening, { id: idListening });
+  const listening = await AppDataSource.manager.findOne(
+    Listening,
+    { where: { id: idListening }, relations: ['genres', 'type'] }
+  );
 
   if (!listening) {
     res.status(404).send('Cette écoute est introuvable.');
@@ -47,7 +56,10 @@ export const update = async(req: Request, res: Response) => {
 
 export const deleteOne = async(req: Request, res: Response) => {
   const idListening = parseInt(req.params.id);
-  const listening = await AppDataSource.manager.findOneBy(Listening, { id: idListening });
+  const listening = await AppDataSource.manager.findOne(
+    Listening,
+    { where: { id: idListening }, relations: ['genres', 'type'] }
+  );
 
   if (!listening) {
     res.status(404).send('Cette écoute est introuvable.');

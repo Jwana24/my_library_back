@@ -9,7 +9,10 @@ export const create = async(req: Request, res: Response) => {
     const insertReading = await AppDataSource.manager.insert(Reading, dataReading);
     // TypeORM does not offer the result directly
     const id = (insertReading).identifiers[0].id;
-    res.status(201).json(await AppDataSource.manager.findOneBy(Reading, { id: id }));
+    res.status(201).json(await AppDataSource.manager.findOne(
+      Reading,
+      { where: { id: id }, relations: ['genres', 'type'] }
+    ));
   } catch (error) {
     res.status(500).send(error);
   }
@@ -21,7 +24,10 @@ export const getAll = async(_req: Request, res: Response) => {
 
 export const getOne = async(req: Request, res: Response) => {
   const idReading = parseInt(req.params.id);
-  const reading = await AppDataSource.manager.findOneBy(Reading, { id: idReading });
+  const reading = await AppDataSource.manager.findOne(
+    Reading,
+    { where: { id: idReading }, relations: ['genres', 'type'] }
+  );
 
   if (!reading) {
     res.status(404).send('Cette lecture est introuvable.');
@@ -32,7 +38,10 @@ export const getOne = async(req: Request, res: Response) => {
 export const update = async(req: Request, res: Response) => {
   const idReading = parseInt(req.params.id);
   const dataReading = req.body;
-  const reading = await AppDataSource.manager.findOneBy(Reading, { id: idReading });
+  const reading = await AppDataSource.manager.findOne(
+    Reading,
+    { where: { id: idReading }, relations: ['genres', 'type'] }
+  );
 
   if (!reading) {
     res.status(404).send('Cette lecture est introuvable.');
@@ -48,7 +57,10 @@ export const update = async(req: Request, res: Response) => {
 
 export const deleteOne = async(req: Request, res: Response) => {
   const idReading = parseInt(req.params.id);
-  const reading = await AppDataSource.manager.findOneBy(Reading, { id: idReading });
+  const reading = await AppDataSource.manager.findOne(
+    Reading,
+    { where: { id: idReading }, relations: ['genres', 'type'] }
+  );
 
   if (!reading) {
     res.status(404).send('Cette lecture est introuvable.');

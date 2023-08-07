@@ -8,7 +8,10 @@ export const create = async(req: Request, res: Response) => {
   try {
     const insertWatching = await AppDataSource.manager.insert(Watching, dataWatching);
     const id = (insertWatching).identifiers[0].id;
-    res.status(201).json(await AppDataSource.manager.findOneBy(Watching, { id: id }));
+    res.status(201).json(await AppDataSource.manager.findOne(
+      Watching,
+      { where: { id: id }, relations: ['genres', 'type'] }
+    ));
   } catch (error) {
     res.status(500).send(error);
   }
@@ -20,7 +23,10 @@ export const getAll = async(_req: Request, res: Response) => {
 
 export const getOne = async(req: Request, res: Response) => {
   const idWatching = parseInt(req.params.id);
-  const watching = await AppDataSource.manager.findOneBy(Watching, { id: idWatching });
+  const watching = await AppDataSource.manager.findOne(
+    Watching,
+    { where: { id: idWatching }, relations: ['genres', 'type'] }
+  );
 
   if (!watching) {
     res.status(404).send('Ce visionnage est introuvable.');
@@ -31,7 +37,10 @@ export const getOne = async(req: Request, res: Response) => {
 export const update = async(req: Request, res: Response) => {
   const idWatching = parseInt(req.params.id);
   const dataWatching = req.body;
-  const watching = await AppDataSource.manager.findOneBy(Watching, { id: idWatching });
+  const watching = await AppDataSource.manager.findOne(
+    Watching,
+    { where: { id: idWatching }, relations: ['genres', 'type'] }
+  );
 
   if (!watching) {
     res.status(404).send('Ce visionnage est introuvable.');
@@ -47,7 +56,10 @@ export const update = async(req: Request, res: Response) => {
 
 export const deleteOne = async(req: Request, res: Response) => {
   const idWatching = parseInt(req.params.id);
-  const watching = await AppDataSource.manager.findOneBy(Watching, { id: idWatching });
+  const watching = await AppDataSource.manager.findOne(
+    Watching,
+    { where: { id: idWatching }, relations: ['genres', 'type'] }
+  );
 
   if (!watching) {
     res.status(404).send('Ce visionnage est introuvable.');

@@ -9,7 +9,10 @@ export const create = async(req: Request, res: Response) => {
     const insertWatchingType = await AppDataSource.manager.insert(WatchingType, dataWatchingType);
     // TypeORM does not offer the result directly
     const id = (insertWatchingType).identifiers[0].id;
-    res.status(201).json(await AppDataSource.manager.findOneBy(WatchingType, { id: id }));
+    res.status(201).json(await AppDataSource.manager.findOne(
+      WatchingType,
+      { where: { id: id }, relations: ['genres', 'type'] }
+    ));
   } catch (error) {
     res.status(500).send(error);
   }
@@ -21,7 +24,10 @@ export const getAll = async(_req: Request, res: Response) => {
 
 export const getOne = async(req: Request, res: Response) => {
   const idWatchingType = parseInt(req.params.id);
-  const watchingType = await AppDataSource.manager.findOneBy(WatchingType, { id: idWatchingType });
+  const watchingType = await AppDataSource.manager.findOne(
+    WatchingType,
+    { where: { id: idWatchingType }, relations: ['genres', 'type'] }
+  );
 
   if (!watchingType) {
     res.status(404).send('Ce type de visionnage est introuvable.');
@@ -32,7 +38,10 @@ export const getOne = async(req: Request, res: Response) => {
 export const update = async(req: Request, res: Response) => {
   const idWatchingType = parseInt(req.params.id);
   const dataWatchingType = req.body;
-  const watchingType = await AppDataSource.manager.findOneBy(WatchingType, { id: idWatchingType });
+  const watchingType = await AppDataSource.manager.findOne(
+    WatchingType,
+    { where: { id: idWatchingType }, relations: ['genres', 'type'] }
+  );
 
   if (!watchingType) {
     res.status(404).send('Ce type de visionnage est introuvable.');
@@ -48,7 +57,10 @@ export const update = async(req: Request, res: Response) => {
 
 export const deleteOne = async(req: Request, res: Response) => {
   const idWatchingType = parseInt(req.params.id);
-  const watchingType = await AppDataSource.manager.findOneBy(WatchingType, { id: idWatchingType });
+  const watchingType = await AppDataSource.manager.findOne(
+    WatchingType,
+    { where: { id: idWatchingType }, relations: ['genres', 'type'] }
+  );
 
   if (!watchingType) {
     res.status(404).send('Ce type de visionnage est introuvable.');
