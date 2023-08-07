@@ -1,62 +1,25 @@
 import express from "express";
 const router = express.Router();
-import { AppDataSource } from "../src/data-source.js";
-import { ListeningType } from "../src/entity/ListeningType.js";
+import { create, deleteOne, getAll, getOne, update } from "../src/controller/ListeningType.js";
 
 router.post('/listening-type', async(req, res) => {
-  const dataListeningType = req.body;
-
-  try {
-    const insertListeningType = await AppDataSource.manager.insert(ListeningType, dataListeningType);
-    // TypeORM does not offer the result directly
-    const id = (insertListeningType).identifiers[0].id;
-    res.status(201).json(await AppDataSource.manager.findOneBy(ListeningType, { id: id }));
-  } catch (error) {
-    res.status(500).send(error);
-  }
+  await create(req, res);
 });
 
 router.get('/listening-type', async (req, res) => {
-  res.status(200).json(await AppDataSource.manager.find(ListeningType));
+  await getAll(req, res);
 });
 
 router.get('/listening-type/:id', async(req, res) => {
-  const idListeningType = parseInt(req.params.id);
-  const listeningType = await AppDataSource.manager.findOneBy(ListeningType, { id: idListeningType });
-
-  if (!listeningType) {
-    res.status(404).send('Ce type d\'écoute est introuvable.');
-  }
-  res.status(200).json(listeningType);
+  await getOne(req, res);
 });
 
 router.patch('/listening-type/:id', async(req, res) => {
-  const idListeningType = parseInt(req.params.id);
-  const dataListeningType = req.body;
-  const listeningType = await AppDataSource.manager.findOneBy(ListeningType, { id: idListeningType });
-
-  if (!listeningType) {
-    res.status(404).send('Ce type d\'écoute est introuvable.');
-  }
-
-  res.status(201).json(await AppDataSource.manager.save(ListeningType,
-    {
-      ...listeningType,
-      ...dataListeningType
-    }
-  ));
+  await update(req, res);
 });
 
 router.delete('/listening-type/:id', async(req, res) => {
-  const idListeningType = parseInt(req.params.id);
-  const listeningType = await AppDataSource.manager.findOneBy(ListeningType, { id: idListeningType });
-
-  if (!listeningType) {
-    res.status(404).send('Ce type d\'écoute est introuvable.');
-  }
-
-  await AppDataSource.manager.remove(listeningType)
-  res.sendStatus(200);
+  await deleteOne(req, res);
 });
 
 export default router;
