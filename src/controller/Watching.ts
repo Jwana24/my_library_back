@@ -20,7 +20,7 @@ export const create = async(req: Request, res: Response) => {
 
 export const getAll = async(req: Request, res: Response) => {
   const sortQuery: { [key: string]: 'ASC' | 'DESC' } = req.query.sort as { [key: string]: 'ASC' | 'DESC' };
-  // const filterQuery = req.query.filter;
+  const filterQuery: { [key: string]: string } = req.query.filter as { [key: string]: string };
 
   const queryBuilder = AppDataSource.manager
     .getRepository(Watching)
@@ -40,6 +40,13 @@ export const getAll = async(req: Request, res: Response) => {
       ...(sortQuery.title && { "watching.title": sortQuery.title }),
       // ...(sortQuery.rating && { "watching.rating": sortQuery.rating })
     });
+  }
+  if (filterQuery) {
+    queryBuilder.where("watching.title LIKE :title", { title: `%${filterQuery.title}%` });
+    /* todo: filter on genre
+           : filter on type
+           : filter on status
+    */
   }
 
   // console.log(queryBuilder.getSql())
