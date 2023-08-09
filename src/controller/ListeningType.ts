@@ -6,12 +6,11 @@ export const create = async(req: Request, res: Response) => {
   const dataListeningType = req.body;
 
   try {
-    const insertListeningType = await AppDataSource.manager.insert(ListeningType, dataListeningType);
-    // TypeORM does not offer the result directly
-    const id = (insertListeningType).identifiers[0].id;
+    const insertListeningType = await AppDataSource.manager.save(ListeningType, dataListeningType);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       ListeningType,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertListeningType.id } }
     ));
   } catch (error) {
     res.status(500).send(error);
@@ -26,7 +25,7 @@ export const getOne = async(req: Request, res: Response) => {
   const idListeningType = parseInt(req.params.id);
   const listeningType = await AppDataSource.manager.findOne(
     ListeningType,
-    { where: { id: idListeningType }, relations: ['genres', 'type'] }
+    { where: { id: idListeningType } }
   );
 
   if (!listeningType) {
@@ -40,7 +39,7 @@ export const update = async(req: Request, res: Response) => {
   const dataListeningType = req.body;
   const listeningType = await AppDataSource.manager.findOne(
     ListeningType,
-    { where: { id: idListeningType }, relations: ['genres', 'type'] }
+    { where: { id: idListeningType } }
   );
 
   if (!listeningType) {
@@ -59,7 +58,7 @@ export const deleteOne = async(req: Request, res: Response) => {
   const idListeningType = parseInt(req.params.id);
   const listeningType = await AppDataSource.manager.findOne(
     ListeningType,
-    { where: { id: idListeningType }, relations: ['genres', 'type'] }
+    { where: { id: idListeningType } }
   );
 
   if (!listeningType) {

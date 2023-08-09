@@ -6,11 +6,11 @@ export const create = async(req: Request, res: Response) => {
   const dataWatchingGenre = req.body;
 
   try {
-    const insertWatchingGenre = await AppDataSource.manager.insert(WatchingGenre, dataWatchingGenre);
-    const id = (insertWatchingGenre).identifiers[0].id;
+    const insertWatchingGenre = await AppDataSource.manager.save(WatchingGenre, dataWatchingGenre);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       WatchingGenre,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertWatchingGenre.id } }
     ));
   } catch (error) {
     res.status(500).send(error);
@@ -25,7 +25,7 @@ export const getOne = async(req: Request, res: Response) => {
   const idWatchingGenre = parseInt(req.params.id);
   const watchingGenre = await AppDataSource.manager.findOne(
     WatchingGenre,
-    { where: { id: idWatchingGenre }, relations: ['genres', 'type'] }
+    { where: { id: idWatchingGenre } }
   );
 
   if (!watchingGenre) {
@@ -39,7 +39,7 @@ export const update = async(req: Request, res: Response) => {
   const dataWatchingGenre = req.body;
   const watchingGenre = await AppDataSource.manager.findOne(
     WatchingGenre,
-    { where: { id: idWatchingGenre }, relations: ['genres', 'type'] }
+    { where: { id: idWatchingGenre } }
   );
 
   if (!watchingGenre) {
@@ -58,7 +58,7 @@ export const deleteOne = async(req: Request, res: Response) => {
   const idWatchingGenre = parseInt(req.params.id);
   const watchingGenre = await AppDataSource.manager.findOne(
     WatchingGenre,
-    { where: { id: idWatchingGenre }, relations: ['genres', 'type'] }
+    { where: { id: idWatchingGenre } }
   );
 
   if (!watchingGenre) {

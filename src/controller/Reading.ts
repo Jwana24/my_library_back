@@ -6,20 +6,43 @@ export const create = async(req: Request, res: Response) => {
   const dataReading = req.body;
 
   try {
-    const insertReading = await AppDataSource.manager.insert(Reading, dataReading);
-    // TypeORM does not offer the result directly
-    const id = (insertReading).identifiers[0].id;
+    const insertReading = await AppDataSource.manager.save(Reading, dataReading);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       Reading,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertReading.id }, relations: ['genres', 'type'] }
     ));
   } catch (error) {
     res.status(500).send(error);
   }
 }
 
-export const getAll = async(_req: Request, res: Response) => {
-  res.status(200).json(await AppDataSource.manager.find(Reading));
+export const getAll = async(req: Request, res: Response) => {
+  const sortQuery: { [key: string]: 'ASC' | 'DESC' } = req.query.sort as { [key: string]: 'ASC' | 'DESC' };
+  // const filterQuery = req.query.filter;
+
+  const queryBuilder = AppDataSource.manager
+    .getRepository(Reading)
+    .createQueryBuilder("reading")
+    .leftJoinAndSelect(
+      "reading.type",
+      "rtype"
+    )
+    .leftJoinAndSelect(
+      "reading.genres",
+      "rgenres"
+    )
+
+  if (sortQuery) {
+    queryBuilder.orderBy({
+      ...(sortQuery.title && {"reading.title": sortQuery.title}),
+      // ...(sortQuery.rating && { "reading.rating": sortQuery.rating })
+    });
+  }
+
+  const readings = await queryBuilder.getMany();
+
+  res.status(200).json(readings);
 }
 
 export const getOne = async(req: Request, res: Response) => {

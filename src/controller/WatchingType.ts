@@ -6,12 +6,11 @@ export const create = async(req: Request, res: Response) => {
   const dataWatchingType = req.body;
 
   try {
-    const insertWatchingType = await AppDataSource.manager.insert(WatchingType, dataWatchingType);
-    // TypeORM does not offer the result directly
-    const id = (insertWatchingType).identifiers[0].id;
+    const insertWatchingType = await AppDataSource.manager.save(WatchingType, dataWatchingType);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       WatchingType,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertWatchingType.id } }
     ));
   } catch (error) {
     res.status(500).send(error);
@@ -26,7 +25,7 @@ export const getOne = async(req: Request, res: Response) => {
   const idWatchingType = parseInt(req.params.id);
   const watchingType = await AppDataSource.manager.findOne(
     WatchingType,
-    { where: { id: idWatchingType }, relations: ['genres', 'type'] }
+    { where: { id: idWatchingType } }
   );
 
   if (!watchingType) {
@@ -40,7 +39,7 @@ export const update = async(req: Request, res: Response) => {
   const dataWatchingType = req.body;
   const watchingType = await AppDataSource.manager.findOne(
     WatchingType,
-    { where: { id: idWatchingType }, relations: ['genres', 'type'] }
+    { where: { id: idWatchingType } }
   );
 
   if (!watchingType) {
@@ -59,7 +58,7 @@ export const deleteOne = async(req: Request, res: Response) => {
   const idWatchingType = parseInt(req.params.id);
   const watchingType = await AppDataSource.manager.findOne(
     WatchingType,
-    { where: { id: idWatchingType }, relations: ['genres', 'type'] }
+    { where: { id: idWatchingType } }
   );
 
   if (!watchingType) {

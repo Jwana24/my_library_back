@@ -6,11 +6,11 @@ export const create = async(req: Request, res: Response) => {
   const dataListeningGenre = req.body;
 
   try {
-    const insertListeningGenre = await AppDataSource.manager.insert(ListeningGenre, dataListeningGenre);
-    const id = (insertListeningGenre).identifiers[0].id;
+    const insertListeningGenre = await AppDataSource.manager.save(ListeningGenre, dataListeningGenre);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       ListeningGenre,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertListeningGenre.id } }
     ));
   } catch (error) {
     res.status(500).send(error);
@@ -25,7 +25,7 @@ export const getOne = async(req: Request, res: Response) => {
   const idListeningGenre = parseInt(req.params.id);
   const listeningGenre = await AppDataSource.manager.findOne(
     ListeningGenre,
-    { where: { id: idListeningGenre }, relations: ['genres', 'type'] }
+    { where: { id: idListeningGenre } }
   );
 
   if (!listeningGenre) {
@@ -39,7 +39,7 @@ export const update = async(req: Request, res: Response) => {
   const dataListeningGenre = req.body;
   const listeningGenre = await AppDataSource.manager.findOne(
     ListeningGenre,
-    { where: { id: idListeningGenre }, relations: ['genres', 'type'] }
+    { where: { id: idListeningGenre } }
   );
 
   if (!listeningGenre) {
@@ -58,7 +58,7 @@ export const deleteOne = async(req: Request, res: Response) => {
   const idListeningGenre = parseInt(req.params.id);
   const listeningGenre = await AppDataSource.manager.findOne(
     ListeningGenre,
-    { where: { id: idListeningGenre }, relations: ['genres', 'type'] }
+    { where: { id: idListeningGenre } }
   );
 
   if (!listeningGenre) {

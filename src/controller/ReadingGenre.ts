@@ -6,11 +6,11 @@ export const create = async(req: Request, res: Response) => {
   const dataReadingGenre = req.body;
 
   try {
-    const insertReadingGenre = await AppDataSource.manager.insert(ReadingGenre, dataReadingGenre);
-    const id = (insertReadingGenre).identifiers[0].id;
+    const insertReadingGenre = await AppDataSource.manager.save(ReadingGenre, dataReadingGenre);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       ReadingGenre,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertReadingGenre.id } }
     ));
   } catch (error) {
     res.status(500).send(error);
@@ -25,7 +25,7 @@ export const getOne = async(req: Request, res: Response) => {
   const idReadingGenre = parseInt(req.params.id);
   const readingGenre = await AppDataSource.manager.findOne(
     ReadingGenre,
-    { where: { id: idReadingGenre }, relations: ['genres', 'type'] }
+    { where: { id: idReadingGenre } }
   );
 
   if (!readingGenre) {
@@ -39,7 +39,7 @@ export const update = async(req: Request, res: Response) => {
   const dataReadingGenre = req.body;
   const readingGenre = await AppDataSource.manager.findOne(
     ReadingGenre,
-    { where: { id: idReadingGenre }, relations: ['genres', 'type'] }
+    { where: { id: idReadingGenre } }
   );
 
   if (!readingGenre) {
@@ -58,7 +58,7 @@ export const deleteOne = async(req: Request, res: Response) => {
   const idReadingGenre = parseInt(req.params.id);
   const readingGenre = await AppDataSource.manager.findOne(
     ReadingGenre,
-    { where: { id: idReadingGenre }, relations: ['genres', 'type'] }
+    { where: { id: idReadingGenre } }
   );
 
   if (!readingGenre) {

@@ -6,12 +6,11 @@ export const create = async(req: Request, res: Response) => {
   const dataReadingType = req.body;
 
   try {
-    const insertReadingType = await AppDataSource.manager.insert(ReadingType, dataReadingType);
-    // TypeORM does not offer the result directly
-    const id = (insertReadingType).identifiers[0].id;
+    const insertReadingType = await AppDataSource.manager.save(ReadingType, dataReadingType);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       ReadingType,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertReadingType.id } }
     ));
   } catch (error) {
     res.status(500).send(error);
@@ -26,7 +25,7 @@ export const getOne = async(req: Request, res: Response) => {
   const idReadingType = parseInt(req.params.id);
   const readingType = await AppDataSource.manager.findOne(
     ReadingType,
-    { where: { id: idReadingType }, relations: ['genres', 'type'] }
+    { where: { id: idReadingType } }
   );
 
   if (!readingType) {
@@ -40,7 +39,7 @@ export const update = async(req: Request, res: Response) => {
   const dataReadingType = req.body;
   const readingType = await AppDataSource.manager.findOne(
     ReadingType,
-    { where: { id: idReadingType }, relations: ['genres', 'type'] }
+    { where: { id: idReadingType } }
   );
 
   if (!readingType) {
@@ -59,7 +58,7 @@ export const deleteOne = async(req: Request, res: Response) => {
   const idReadingType = parseInt(req.params.id);
   const readingType = await AppDataSource.manager.findOne(
     ReadingType,
-    { where: { id: idReadingType }, relations: ['genres', 'type'] }
+    { where: { id: idReadingType } }
   );
 
   if (!readingType) {

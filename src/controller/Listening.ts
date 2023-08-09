@@ -1,24 +1,50 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
 import { Listening } from "../entity/Listening.js";
+import { Watching } from "../entity/Watching";
 
 export const create = async(req: Request, res: Response) => {
   const dataListening = req.body;
 
   try {
-    const insertListening = await AppDataSource.manager.insert(Listening, dataListening);
-    const id = (insertListening).identifiers[0].id;
+    const insertListening = await AppDataSource.manager.save(Listening, dataListening);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       Listening,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertListening.id }, relations: ['genres', 'type'] }
     ));
   } catch (error) {
     res.status(500).send(error);
   }
 }
 
-export const getAll = async(_req: Request, res: Response) => {
-  res.status(200).json(await AppDataSource.manager.find(Listening));
+export const getAll = async(req: Request, res: Response) => {
+  const sortQuery: { [key: string]: 'ASC' | 'DESC' } = req.query.sort as { [key: string]: 'ASC' | 'DESC' };
+  // const filterQuery = req.query.filter;
+
+  const queryBuilder = AppDataSource.manager
+    .getRepository(Listening)
+    .createQueryBuilder("listening")
+    .leftJoinAndSelect(
+      "listening.type",
+      "ltype"
+    )
+    .leftJoinAndSelect(
+      "listening.genres",
+      "lgenres"
+    )
+  ;
+
+  if (sortQuery) {
+    queryBuilder.orderBy({
+      ...(sortQuery.title && { "listening.title": sortQuery.title }),
+      // ...(sortQuery.rating && { "listening.rating": sortQuery.rating })
+    });
+  }
+
+  const listenings = await queryBuilder.getMany();
+
+  res.status(200).json(listenings);
 }
 
 export const getOne = async(req: Request, res: Response) => {

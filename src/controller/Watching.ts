@@ -1,24 +1,52 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
 import { Watching } from "../entity/Watching.js";
+import { Reading } from "../entity/Reading";
 
 export const create = async(req: Request, res: Response) => {
   const dataWatching = req.body;
 
   try {
-    const insertWatching = await AppDataSource.manager.insert(Watching, dataWatching);
-    const id = (insertWatching).identifiers[0].id;
+    const insertWatching = await AppDataSource.manager.save(Watching, dataWatching);
+
     res.status(201).json(await AppDataSource.manager.findOne(
       Watching,
-      { where: { id: id }, relations: ['genres', 'type'] }
+      { where: { id: insertWatching.id }, relations: ['genres', 'type'] }
     ));
   } catch (error) {
     res.status(500).send(error);
   }
 }
 
-export const getAll = async(_req: Request, res: Response) => {
-  res.status(200).json(await AppDataSource.manager.find(Watching));
+export const getAll = async(req: Request, res: Response) => {
+  const sortQuery: { [key: string]: 'ASC' | 'DESC' } = req.query.sort as { [key: string]: 'ASC' | 'DESC' };
+  // const filterQuery = req.query.filter;
+
+  const queryBuilder = AppDataSource.manager
+    .getRepository(Watching)
+    .createQueryBuilder("watching")
+    .leftJoinAndSelect(
+      "watching.type",
+      "wtype"
+    )
+    .leftJoinAndSelect(
+      "watching.genres",
+      "wgenres"
+    )
+  ;
+
+  if (sortQuery) {
+    queryBuilder.orderBy({
+      ...(sortQuery.title && { "watching.title": sortQuery.title }),
+      // ...(sortQuery.rating && { "watching.rating": sortQuery.rating })
+    });
+  }
+
+  // console.log(queryBuilder.getSql())
+
+  const watchings = await queryBuilder.getMany();
+
+  res.status(200).json(watchings);
 }
 
 export const getOne = async(req: Request, res: Response) => {
