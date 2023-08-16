@@ -43,10 +43,9 @@ export const getAll = async(req: Request, res: Response) => {
   }
   if (filterQuery) {
     queryBuilder.where("watching.title LIKE :title", { title: `%${filterQuery.title}%` });
-    /* todo: filter on genre
-           : filter on type
-           : filter on status
-    */
+    queryBuilder.where("wgenres.name = :genre", { genre: filterQuery.genre });
+    queryBuilder.where("wtype.name = :type", { type: filterQuery.type });
+    queryBuilder.where("watching.status = :status", { status: filterQuery.status });
   }
 
   // console.log(queryBuilder.getSql())
