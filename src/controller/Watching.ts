@@ -42,13 +42,21 @@ export const getAll = async(req: Request, res: Response) => {
     });
   }
   if (filterQuery) {
-    queryBuilder.where("watching.title LIKE :title", { title: `%${filterQuery.title}%` });
-    queryBuilder.where("wgenres.name = :genre", { genre: filterQuery.genre });
-    queryBuilder.where("wtype.name = :type", { type: filterQuery.type });
-    queryBuilder.where("watching.status = :status", { status: filterQuery.status });
+    if (filterQuery.title) {
+      queryBuilder.andWhere("watching.title LIKE :title", { title: `${filterQuery.title}%` });
+    }
+    if (filterQuery.genre) {
+      queryBuilder.andWhere("wgenres.name = :genre", { genre: filterQuery.genre });
+    }
+    if (filterQuery.type) {
+      queryBuilder.andWhere("wtype.name = :type", { type: filterQuery.type });
+    }
+    if (filterQuery.status) {
+      queryBuilder.andWhere("watching.status = :status", { status: filterQuery.status });
+    }
   }
 
-  // console.log(queryBuilder.getSql())
+  console.log(queryBuilder.getSql())
 
   const watchings = await queryBuilder.getMany();
 
