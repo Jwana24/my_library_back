@@ -8,7 +8,7 @@ export class ListeningType {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ unique: true })
     name: string
     @OneToMany(() => Listening, (listening) => listening.type)
     listenings: Listening[]

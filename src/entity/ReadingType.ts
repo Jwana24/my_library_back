@@ -8,7 +8,7 @@ export class ReadingType {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ unique: true })
     name: string
     @OneToMany(() => Reading, (reading) => reading.type)
     readings: Reading[]

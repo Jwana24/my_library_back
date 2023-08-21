@@ -7,7 +7,7 @@ export class ReadingGenre {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ unique: true })
     name: string
     @ManyToOne(() => ReadingType, (type) => type.genres)
     type: ReadingType

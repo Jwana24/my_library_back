@@ -8,7 +8,7 @@ export class WatchingType {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ unique: true })
     name: string
     @OneToMany(() => Watching, (watching) => watching.type)
     watchings: Watching[]
