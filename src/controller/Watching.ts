@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
 import { Watching } from "../entity/Watching.js";
-import { Reading } from "../entity/Reading";
 
 export const create = async(req: Request, res: Response) => {
   const dataWatching = req.body;
@@ -56,7 +55,7 @@ export const getAll = async(req: Request, res: Response) => {
     }
   }
 
-  console.log(queryBuilder.getSql())
+  // console.log(queryBuilder.getSql())
 
   const watchings = await queryBuilder.getMany();
 
