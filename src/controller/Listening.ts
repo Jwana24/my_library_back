@@ -20,7 +20,7 @@ export const create = async(req: Request, res: Response) => {
 
 export const getAll = async(req: Request, res: Response) => {
   const sortQuery: { [key: string]: 'ASC' | 'DESC' } = req.query.sort as { [key: string]: 'ASC' | 'DESC' };
-  // const filterQuery = req.query.filter;
+  const filterQuery: { [key: string]: string } = req.query.filter as { [key: string]: string };
 
   const queryBuilder = AppDataSource.manager
     .getRepository(Listening)
@@ -40,6 +40,20 @@ export const getAll = async(req: Request, res: Response) => {
       ...(sortQuery.title && { "listening.title": sortQuery.title }),
       // ...(sortQuery.rating && { "listening.rating": sortQuery.rating })
     });
+  }
+  if (filterQuery) {
+    if (filterQuery.title) {
+      queryBuilder.andWhere("listening.title LIKE :title", { title: `${filterQuery.title}%` });
+    }
+    if (filterQuery.genre) {
+      queryBuilder.andWhere("lgenres.name = :genre", { genre: filterQuery.genre });
+    }
+    if (filterQuery.type) {
+      queryBuilder.andWhere("ltype.name = :type", { type: filterQuery.type });
+    }
+    if (filterQuery.status) {
+      queryBuilder.andWhere("listening.status = :status", { status: filterQuery.status });
+    }
   }
 
   const listenings = await queryBuilder.getMany();
