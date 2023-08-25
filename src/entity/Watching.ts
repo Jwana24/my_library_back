@@ -28,7 +28,7 @@ export class Watching {
     producer: string
     @Column()
     title: string
-    @Column("blob")
+    @Column({ type: "varchar", nullable: true })
     image: string
     @Column("boolean")
     saga: boolean

@@ -27,6 +27,6 @@ export class Listening {
     artist: string
     @Column()
     title: string
-    @Column("blob")
+    @Column({ type: "varchar", nullable: true })
     image: string
 }

@@ -34,7 +34,7 @@ export class Reading {
     author: string
     @Column()
     title: string
-    @Column("blob")
+    @Column({ type: "varchar", nullable: true })
     image: string
     @Column("boolean")
     saga:boolean
