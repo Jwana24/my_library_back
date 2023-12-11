@@ -84,12 +84,19 @@ export const update = async(req: Request, res: Response) => {
     res.status(404).send('Cette lecture est introuvable.');
   }
 
-  res.status(201).json(await AppDataSource.manager.save(Reading,
+  await AppDataSource.manager.save(Reading,
     {
       ...reading,
       ...dataReading
     }
-  ));
+  )
+
+  const readingAfterUpdate = await AppDataSource.manager.findOne(
+    Reading,
+    { where: { id: idReading }, relations: ['genres', 'type'] }
+  );
+
+  res.status(201).json(readingAfterUpdate);
 }
 
 export const deleteOne = async(req: Request, res: Response) => {

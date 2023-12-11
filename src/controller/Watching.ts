@@ -87,12 +87,19 @@ export const update = async(req: Request, res: Response) => {
     res.status(404).send('Ce visionnage est introuvable.');
   }
 
-  res.status(201).json(await AppDataSource.manager.save(Watching,
+  await AppDataSource.manager.save(Watching,
     {
       ...watching,
       ...dataWatching
     }
-  ));
+  )
+
+  const watchingAfterUpdate = await AppDataSource.manager.findOne(
+    Watching,
+    { where: { id: idWatching }, relations: ['genres', 'type'] }
+  );
+
+  res.status(201).json(watchingAfterUpdate);
 }
 
 export const deleteOne = async(req: Request, res: Response) => {

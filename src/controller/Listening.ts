@@ -86,12 +86,19 @@ export const update = async(req: Request, res: Response) => {
     res.status(404).send('Cette écoute est introuvable.');
   }
 
-  res.status(201).json(await AppDataSource.manager.save(Listening,
+  await AppDataSource.manager.save(Listening,
     {
       ...listening,
       ...dataListening
     }
-  ));
+  )
+
+  const listeningAfterUpdate = await AppDataSource.manager.findOne(
+    Listening,
+    { where: { id: idListening }, relations: ['genres', 'type'] }
+  );
+
+  res.status(201).json(listeningAfterUpdate);
 }
 
 export const deleteOne = async(req: Request, res: Response) => {
