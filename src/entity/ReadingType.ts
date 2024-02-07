@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Reading } from "./Reading.js";
-import { ReadingGenre } from "./ReadingGenre.js";
+import { Reading } from "./Reading";
+import { ReadingGenre } from "./ReadingGenre";
 
 @Entity()
 export class ReadingType {

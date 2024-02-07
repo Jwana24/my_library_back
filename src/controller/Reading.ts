@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
-import { Reading } from "../entity/Reading.js";
+import { Reading } from "../entity/Reading";
 
 export const create = async(req: Request, res: Response) => {
   const dataReading = req.body;
 
   try {
-    const insertReading = await AppDataSource.manager.save(Reading, dataReading);
+    const reading = AppDataSource.manager.create(Reading, dataReading);
+    const insertReading = await AppDataSource.manager.save(reading);
 
     res.status(201).json(await AppDataSource.manager.findOne(
       Reading,
@@ -84,19 +85,25 @@ export const update = async(req: Request, res: Response) => {
     res.status(404).send('Cette lecture est introuvable.');
   }
 
-  await AppDataSource.manager.save(Reading,
-    {
-      ...reading,
-      ...dataReading
-    }
-  )
+  try {
+    const updatedReading = AppDataSource.manager.create(Reading,
+      {
+        ...reading,
+        ...dataReading
+      }
+    );
 
-  const readingAfterUpdate = await AppDataSource.manager.findOne(
-    Reading,
-    { where: { id: idReading }, relations: ['genres', 'type'] }
-  );
+    await AppDataSource.manager.save(Reading, updatedReading);
 
-  res.status(201).json(readingAfterUpdate);
+    const readingAfterUpdate = await AppDataSource.manager.findOne(
+      Reading,
+      { where: { id: idReading }, relations: ['genres', 'type'] }
+    );
+
+    res.status(201).json(readingAfterUpdate);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 }
 
 export const deleteOne = async(req: Request, res: Response) => {

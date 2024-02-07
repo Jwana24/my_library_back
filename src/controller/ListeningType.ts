@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
-import { ListeningType } from "../entity/ListeningType.js";
+import { ListeningType } from "../entity/ListeningType";
 
 export const create = async(req: Request, res: Response) => {
   const dataListeningType = req.body;

@@ -1,6 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { ListeningGenre } from "./ListeningGenre.js";
-import { ListeningType } from "./ListeningType.js";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    ManyToOne,
+    BeforeInsert,
+    BeforeUpdate
+} from "typeorm";
+import { ListeningGenre } from "./ListeningGenre";
+import { ListeningType } from "./ListeningType";
+import { IsInt, Max, Min, validateOrReject } from "class-validator";
 
 export enum Status {
     TOLISTEN = "A écouter",
@@ -9,7 +19,6 @@ export enum Status {
 
 @Entity()
 export class Listening {
-
     @PrimaryGeneratedColumn()
     id: number
 
@@ -29,4 +38,15 @@ export class Listening {
     title: string
     @Column({ type: "varchar", nullable: true })
     image: string
+    @Column({ type: "integer", nullable: true })
+    @IsInt()
+    @Min(0)
+    @Max(10)
+    rating: number
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async validate() {
+        await validateOrReject(this);
+    }
 }

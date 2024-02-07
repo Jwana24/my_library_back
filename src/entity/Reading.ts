@@ -1,6 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { ReadingGenre } from "./ReadingGenre.js";
-import { ReadingType } from "./ReadingType.js";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    ManyToOne,
+    BeforeInsert,
+    BeforeUpdate
+} from "typeorm";
+import { IsInt, Min, Max, validateOrReject } from "class-validator";
+import { ReadingGenre } from "./ReadingGenre";
+import { ReadingType } from "./ReadingType";
 
 export enum Status {
     READINGINPROGRESS = "En cours de lecture",
@@ -16,7 +26,6 @@ export enum Lang {
 
 @Entity()
 export class Reading {
-
     @PrimaryGeneratedColumn()
     id: number
 
@@ -45,4 +54,15 @@ export class Reading {
         enum: Lang
     })
     lang: Lang
+    @Column({ type: "integer", nullable: true })
+    @IsInt()
+    @Min(0)
+    @Max(10)
+    rating: number
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async validate() {
+        await validateOrReject(this);
+    }
 }

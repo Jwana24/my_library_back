@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { ReadingType } from "./ReadingType.js";
+import { ReadingType } from "./ReadingType";
 
 @Entity()
 export class ReadingGenre {

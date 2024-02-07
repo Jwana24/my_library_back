@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { ListeningType } from "./ListeningType.js";
+import { ListeningType } from "./ListeningType";
 
 @Entity()
 export class ListeningGenre {

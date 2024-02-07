@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
-import { Listening } from "../entity/Listening.js";
-import { Watching } from "../entity/Watching";
+import { Listening } from "../entity/Listening";
 
 export const create = async(req: Request, res: Response) => {
   const dataListening = req.body;
 
   try {
-    const insertListening = await AppDataSource.manager.save(Listening, dataListening);
+    const listening = AppDataSource.manager.create(Listening, dataListening);
+    const insertListening = await AppDataSource.manager.save(listening);
 
     res.status(201).json(await AppDataSource.manager.findOne(
       Listening,
@@ -86,19 +86,25 @@ export const update = async(req: Request, res: Response) => {
     res.status(404).send('Cette écoute est introuvable.');
   }
 
-  await AppDataSource.manager.save(Listening,
-    {
-      ...listening,
-      ...dataListening
-    }
-  )
+  try {
+    const updatedListening = AppDataSource.manager.create(Listening,
+      {
+        ...listening,
+        ...dataListening
+      }
+    );
 
-  const listeningAfterUpdate = await AppDataSource.manager.findOne(
-    Listening,
-    { where: { id: idListening }, relations: ['genres', 'type'] }
-  );
+    await AppDataSource.manager.save(Listening, updatedListening);
 
-  res.status(201).json(listeningAfterUpdate);
+    const listeningAfterUpdate = await AppDataSource.manager.findOne(
+      Listening,
+      {where: {id: idListening}, relations: ['genres', 'type']}
+    );
+
+    res.status(201).json(listeningAfterUpdate);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 }
 
 export const deleteOne = async(req: Request, res: Response) => {

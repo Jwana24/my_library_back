@@ -1,6 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
-import { WatchingGenre } from "./WatchingGenre.js";
-import { WatchingType } from "./WatchingType.js";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    ManyToOne,
+    BeforeInsert,
+    BeforeUpdate
+} from "typeorm";
+import { IsInt, Max, Min, validateOrReject } from "class-validator";
+import { WatchingGenre } from "./WatchingGenre";
+import { WatchingType } from "./WatchingType";
 
 export enum Status {
     WATCHINGINPROGRESS = "En cours de visionnage",
@@ -10,7 +20,6 @@ export enum Status {
 
 @Entity()
 export class Watching {
-
     @PrimaryGeneratedColumn()
     id: number
 
@@ -34,4 +43,15 @@ export class Watching {
     saga: boolean
     @Column("text")
     summary: string
+    @Column({ type: "integer", nullable: true })
+    @IsInt()
+    @Min(0)
+    @Max(10)
+    rating: number
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async validate() {
+        await validateOrReject(this);
+    }
 }

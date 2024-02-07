@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
-import { ReadingGenre } from "../entity/ReadingGenre.js";
+import { ReadingGenre } from "../entity/ReadingGenre";
 
 export const create = async(req: Request, res: Response) => {
   const dataReadingGenre = req.body;

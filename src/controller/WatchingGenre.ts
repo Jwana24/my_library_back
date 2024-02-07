@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
-import { WatchingGenre } from "../entity/WatchingGenre.js";
+import { WatchingGenre } from "../entity/WatchingGenre";
 
 export const create = async(req: Request, res: Response) => {
   const dataWatchingGenre = req.body;

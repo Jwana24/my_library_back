@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
-import { Watching } from "../entity/Watching.js";
+import { Watching } from "../entity/Watching";
 
 export const create = async(req: Request, res: Response) => {
   const dataWatching = req.body;
 
   try {
-    const insertWatching = await AppDataSource.manager.save(Watching, dataWatching);
+    const watching = AppDataSource.manager.create(Watching, dataWatching);
+    const insertWatching = await AppDataSource.manager.save(watching);
 
     res.status(201).json(await AppDataSource.manager.findOne(
       Watching,
@@ -87,19 +88,25 @@ export const update = async(req: Request, res: Response) => {
     res.status(404).send('Ce visionnage est introuvable.');
   }
 
-  await AppDataSource.manager.save(Watching,
-    {
-      ...watching,
-      ...dataWatching
-    }
-  )
+  try {
+    const updatedWatching = AppDataSource.manager.create(Watching,
+      {
+        ...watching,
+        ...dataWatching
+      }
+    );
 
-  const watchingAfterUpdate = await AppDataSource.manager.findOne(
-    Watching,
-    { where: { id: idWatching }, relations: ['genres', 'type'] }
-  );
+    await AppDataSource.manager.save(Watching, updatedWatching);
 
-  res.status(201).json(watchingAfterUpdate);
+    const watchingAfterUpdate = await AppDataSource.manager.findOne(
+      Watching,
+      {where: {id: idWatching}, relations: ['genres', 'type']}
+    );
+
+    res.status(201).json(watchingAfterUpdate);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 }
 
 export const deleteOne = async(req: Request, res: Response) => {
