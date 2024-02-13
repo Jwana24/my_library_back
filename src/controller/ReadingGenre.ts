@@ -21,7 +21,8 @@ export const getAll = async(_req: Request, res: Response) => {
   res.status(200).json(await AppDataSource.manager.find(ReadingGenre, {
     order: {
       name: "ASC"
-    }
+    },
+    relations: ['type']
   }));
 }
 
