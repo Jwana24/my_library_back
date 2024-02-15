@@ -18,7 +18,16 @@ export const create = async(req: Request, res: Response) => {
 }
 
 export const getAll = async(_req: Request, res: Response) => {
-  res.status(200).json(await AppDataSource.manager.find(ListeningType));
+  res.status(200).json(await AppDataSource.manager.find(ListeningType,
+    {
+      relations: ['genres'],
+      order: {
+        genres: {
+          name: "ASC"
+        }
+      }
+    }
+  ));
 }
 
 export const getOne = async(req: Request, res: Response) => {
