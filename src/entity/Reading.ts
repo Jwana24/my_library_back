@@ -8,7 +8,7 @@ import {
     BeforeInsert,
     BeforeUpdate
 } from "typeorm";
-import { IsInt, Min, Max, validateOrReject } from "class-validator";
+import { IsInt, Min, Max, validateOrReject, IsOptional } from "class-validator";
 import { ReadingGenre } from "./ReadingGenre";
 import { ReadingType } from "./ReadingType";
 
@@ -58,6 +58,7 @@ export class Reading {
     @IsInt()
     @Min(0)
     @Max(10)
+    @IsOptional()
     rating: number
 
     @BeforeInsert()

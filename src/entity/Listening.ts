@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import { ListeningGenre } from "./ListeningGenre";
 import { ListeningType } from "./ListeningType";
-import { IsInt, Max, Min, validateOrReject } from "class-validator";
+import { IsInt, IsOptional, Max, Min, validateOrReject } from "class-validator";
 
 export enum Status {
     TOLISTEN = "A écouter",
@@ -42,6 +42,7 @@ export class Listening {
     @IsInt()
     @Min(0)
     @Max(10)
+    @IsOptional()
     rating: number
 
     @BeforeInsert()

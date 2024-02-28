@@ -8,7 +8,7 @@ import {
     BeforeInsert,
     BeforeUpdate
 } from "typeorm";
-import { IsInt, Max, Min, validateOrReject } from "class-validator";
+import { IsInt, IsOptional, Max, Min, validateOrReject } from "class-validator";
 import { WatchingGenre } from "./WatchingGenre";
 import { WatchingType } from "./WatchingType";
 
@@ -47,6 +47,7 @@ export class Watching {
     @IsInt()
     @Min(0)
     @Max(10)
+    @IsOptional()
     rating: number
 
     @BeforeInsert()
